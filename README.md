@@ -166,10 +166,10 @@ Request Body (JSON)
 }
 ```
 
-6️⃣ GET /api/todos/owner/{ownerid} : 특정 사용자의 작성 및 공유받은 할일 조회
-Request Parameters
+6️⃣ GET /api/todos/owner/{ownerid} : 특정 사용자의 작성 및 공유받은 할일 조회<br>
+Request Parameters<br>
 {ownerid} : 사용자 ID
 
-7️⃣ GET /api/todos/share/{userid} : 특정 사용자가 공유 받은 할일 조회
-Request Parameters
+7️⃣ GET /api/todos/share/{userid} : 특정 사용자가 공유 받은 할일 조회<br>
+Request Parameters<br>
 {userid} : 사용자 ID
