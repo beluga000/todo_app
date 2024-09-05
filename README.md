@@ -19,8 +19,9 @@
 	•	MySQL 데이터베이스 설정
 
 ### 2.1 MySQL 데이터베이스 설정
-
+```
 CREATE DATABASE todo_app;
 CREATE USER 'todo_user'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON todo_app.* TO 'todo_user'@'localhost';
 FLUSH PRIVILEGES;
+```
