@@ -120,7 +120,7 @@ API 문서화를 위해 Swagger를 사용했습니다. Swagger는 RESTful API의
 
 Swagger UI는 애플리케이션이 실행될 때 자동으로 생성됩니다. 모든 API 엔드포인트는 http://localhost:8080/swagger-ui.html에서 확인할 수 있습니다. 아래는 주요 API와 설명입니다.
 
-•POST /api/todos: 새로운 할일 생성
+1️⃣ POST /api/todos: 새로운 할일 생성
 Request Body (JSON)
 ```
 {
@@ -133,7 +133,7 @@ Request Body (JSON)
 }
 ```
 
-•PUT /api/todos/{id}: 할일 수정
+2️⃣ PUT /api/todos/{id}: 할일 수정
 Request Body (JSON)
 ```
 {
@@ -146,17 +146,17 @@ Request Body (JSON)
 }
 ```
 
-•PATCH /api/todos/{id}/status: 할일 상태 변경
+3️⃣ PATCH /api/todos/{id}/status: 할일 상태 변경
 Request Parameters 
 completed : true 또는 false
 
-•POST /api/todos/share: To-Do 공유
+4️⃣ POST /api/todos/share: To-Do 공유
 Request Parameters
 toDoId : 공유할 To-Do의 ID
 ownerId : To-Do 소유자의 ID
 sharedWithUserId : 공유받을 사용자의 ID
 
-•POST /api/users : 새로운 사용자 생성
+5️⃣ POST /api/users : 새로운 사용자 생성
 Request Body (JSON)
 ```
 {
@@ -166,10 +166,10 @@ Request Body (JSON)
 }
 ```
 
-•GET /api/todos/owner/{ownerid} : 특정 사용자의 작성 및 공유받은 할일 조회
+6️⃣ GET /api/todos/owner/{ownerid} : 특정 사용자의 작성 및 공유받은 할일 조회
 Request Parameters
 {ownerid} : 사용자 ID
 
-•GET /api/todos/share/{userid} : 특정 사용자가 공유 받은 할일 조회
+7️⃣ GET /api/todos/share/{userid} : 특정 사용자가 공유 받은 할일 조회
 Request Parameters
 {userid} : 사용자 ID
