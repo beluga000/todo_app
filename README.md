@@ -13,7 +13,7 @@
 
 # 2. 소스 빌드 및 실행 방법 메뉴얼(DB 스키마 포함)
 
-	•	Java Development Kit (JDK) 11 이상 설치
+	•	Java 17 이상 설치
 	•	Maven 3.6 이상 설치
 	•	MySQL 8.0 이상 설치 및 실행
 	•	MySQL 데이터베이스 설정
