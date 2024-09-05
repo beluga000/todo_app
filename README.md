@@ -147,14 +147,14 @@ Request Body (JSON)
 ```
 
 3️⃣ PATCH /api/todos/{id}/status: 할일 상태 변경<br>
-Request Parameters 
+Request Parameters <br>
 completed : true 또는 false
 
 4️⃣ POST /api/todos/share: To-Do 공유<br>
-Request Parameters
-toDoId : 공유할 To-Do의 ID
-ownerId : To-Do 소유자의 ID
-sharedWithUserId : 공유받을 사용자의 ID
+Request Parameters<br>
+toDoId : 공유할 To-Do의 ID<br>
+ownerId : To-Do 소유자의 ID<br>
+sharedWithUserId : 공유받을 사용자의 ID<br>
 
 5️⃣ POST /api/users : 새로운 사용자 생성<br>
 Request Body (JSON)
