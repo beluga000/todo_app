@@ -29,17 +29,31 @@ public class ToDoController {
 
     @PostMapping
     @Operation(summary = "새로운 할일 생성", description = "POST 요청을 통해 새로운 할일을 생성합니다. 생성된 할일은 응답으로 반환됩니다.")
-    public ResponseEntity<ToDo> createToDo(@RequestBody ToDo toDo) {
+    public ResponseEntity<?> createToDo(@RequestBody ToDo toDo) {
         if (toDo.getOwner() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("소유자(owner)가 null입니다.");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDoService.createToDo(toDo));
+        try {
+            ToDo createdToDo = toDoService.createToDo(toDo);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdToDo);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("할일 생성 중 오류 발생: " + e.getMessage());
+        }
     }
+
 
     @GetMapping
     @Operation(summary = "모든 할일 조회", description = "GET 요청을 통해 모든 할일을 조회합니다.")
-    public List<ToDo> getAllToDos() {
-        return toDoService.getAllToDos();
+    public ResponseEntity<?> getAllToDos() {
+        try {
+            List<ToDo> todos = toDoService.getAllToDos();
+            return ResponseEntity.ok(todos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("모든 할일 조회 중 오류 발생: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -51,41 +65,66 @@ public class ToDoController {
 
     @PutMapping("/{id}")
     @Operation(summary = "할일 수정", description = "PUT 요청을 통해 특정 ID의 할일을 수정합니다. 수정된 할일은 응답으로 반환됩니다.")
-    public ResponseEntity<ToDo> updateToDo(@PathVariable Long id, @RequestBody ToDo toDo) {
-        ToDo updatedToDo = toDoService.updateToDo(id, toDo);
-        return updatedToDo != null ? ResponseEntity.ok(updatedToDo) : ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateToDo(@PathVariable Long id, @RequestBody ToDo toDo) {
+        try {
+            ToDo updatedToDo = toDoService.updateToDo(id, toDo);
+            return updatedToDo != null ? ResponseEntity.ok(updatedToDo) 
+                                       : ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                       .body("ID가 " + id + "인 할일을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("할일 수정 중 오류 발생: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "할일 삭제", description = "DELETE 요청을 통해 특정 ID의 할일을 삭제합니다.")
-    public ResponseEntity<Void> deleteToDoById(@PathVariable Long id) {
-        toDoService.deleteToDoById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteToDoById(@PathVariable Long id) {
+        try {
+            toDoService.deleteToDoById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("ID가 " + id + "인 할일 삭제 중 오류 발생: " + e.getMessage());
+        }
     }
 
     @GetMapping("/owner/{ownerId}")
     @Operation(summary = "사용자가 작성한 할일 및 공유받은 할일 조회", description = "GET 요청을 통해 특정 사용자가 작성한 할일과 공유받은 할일을 모두 조회합니다.")
-    public ResponseEntity<List<ToDo>> getToDosByOwnerId(@PathVariable Long ownerId) {
+    public ResponseEntity<?> getToDosByOwnerId(@PathVariable Long ownerId) {
         User owner = userService.findUserById(ownerId);
         if (owner == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("ID가 " + ownerId + "인 사용자를 찾을 수 없습니다.");
         }
 
-        // 작성한 할일 조회
-        List<ToDo> ownedToDos = toDoService.getToDosByOwner(owner);
-        
-        // 공유받은 할일 조회
-        List<ToDo> sharedToDos = toDoService.getToDosSharedWithUser(owner);
+        try {
+            // 작성한 할일 조회
+            List<ToDo> ownedToDos = toDoService.getToDosByOwner(owner);
+            
+            // 공유받은 할일 조회
+            List<ToDo> sharedToDos = toDoService.getToDosSharedWithUser(owner);
 
-        // 작성한 할일과 공유받은 할일을 합친 결과 반환
-        ownedToDos.addAll(sharedToDos);
-        return ResponseEntity.ok(ownedToDos);
+            // 작성한 할일과 공유받은 할일을 합친 결과 반환
+            ownedToDos.addAll(sharedToDos);
+            return ResponseEntity.ok(ownedToDos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("사용자 ID가 " + ownerId + "인 할일 조회 중 오류 발생: " + e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "할일 상태 변경", description = "PATCH 요청을 통해 할일의 상태(완료/미완료)를 변경합니다.")
-    public ResponseEntity<ToDo> updateToDoStatus(@PathVariable Long id, @RequestParam boolean completed) {
-    ToDo updatedToDo = toDoService.updateToDoStatus(id, completed);
-    return updatedToDo != null ? ResponseEntity.ok(updatedToDo) : ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateToDoStatus(@PathVariable Long id, @RequestParam boolean completed) {
+        try {
+            ToDo updatedToDo = toDoService.updateToDoStatus(id, completed);
+            return updatedToDo != null ? ResponseEntity.ok(updatedToDo) 
+                                       : ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                       .body("ID가 " + id + "인 할일을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("ID가 " + id + "인 할일 상태 변경 중 오류 발생: " + e.getMessage());
+        }
     }
 }

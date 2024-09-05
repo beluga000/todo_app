@@ -22,8 +22,18 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "새로운 사용자 생성", description = "POST 요청을 통해 새로운 사용자를 생성합니다. 생성된 사용자는 응답으로 반환됩니다.")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
-    }    
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        if (user == null || user.getUsername() == null || user.getUsername().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("사용자 정보가 유효하지 않습니다. 사용자 이름이 필요합니다.");
+        }
+        try {
+            User createdUser = userService.createUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("사용자 생성 중 오류 발생: " + e.getMessage());
+        }
+    }
 
 }
